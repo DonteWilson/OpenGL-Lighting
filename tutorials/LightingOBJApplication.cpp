@@ -45,16 +45,16 @@ bool LightingOBJApplication::startup() {
 
 	// load a mesh
 	m_mesh = new Mesh();
-	if (m_mesh->loadObj("./models/stanford/dragon.obj", true, true) == false)
+	if (m_mesh->loadObj("./bin/models/stanford/dragon.obj", true, true) == false)
 		return false;
 	
 	// load a shader
 	m_shader = new Shader();
-	if (m_shader->loadShader(GL_VERTEX_SHADER, "./shaders/phong.vert") == false) {
+	if (m_shader->loadShader(GL_VERTEX_SHADER, "./bin/shaders/phong.vert") == false) {
 		printf("Vertex Shader Error: %s\n", m_shader->getLastError());
 		return false;
 	}
-	if (m_shader->loadShader(GL_FRAGMENT_SHADER, "./shaders/phong.frag") == false) {
+	if (m_shader->loadShader(GL_FRAGMENT_SHADER, "./bin/shaders/phong.frag") == false) {
 		printf("Fragment Shader Error: %s\n", m_shader->getLastError());
 		return false;
 	}
