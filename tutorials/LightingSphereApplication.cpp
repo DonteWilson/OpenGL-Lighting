@@ -39,12 +39,12 @@ bool LightingSphereApplication::startup() {
 	m_camera->setLookAtFrom(vec3(10, 10, 10), vec3(0));
 
 	// set up light (direction updates each frame)
-	m_directionalLight.diffuse = vec3(1);
+	m_directionalLight.diffuse = vec3(1,0,1);
 	m_directionalLight.specular = vec3(1);
 	m_ambientLight = vec3(0.25f);
 
 	// set up material
-	m_material.diffuse = vec3(1);
+	m_material.diffuse = vec3(0,1,1);
 	m_material.ambient = vec3(1);
 	m_material.specular = vec3(1);
 	m_material.specularPower = 64;
@@ -100,7 +100,7 @@ bool LightingSphereApplication::update(float deltaTime) {
 
 	// rotate light direction
 	float time = (float)glfwGetTime();
-	m_directionalLight.direction = vec3(sinf(time), 0, cosf(time));
+	m_directionalLight.direction = vec3(sin(time), 0, cos(time));
 
 	// clear the gizmos and add a transform and grid
 	Gizmos::clear();
@@ -265,6 +265,10 @@ void LightingSphereApplication::generateSphere(unsigned int segments, unsigned i
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(AIEVertex), 0);
 
+
+	// color
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(AIEVertex), (void*)(sizeof(vec4)));
 	// normals
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 4, GL_FLOAT, GL_TRUE, sizeof(AIEVertex), (void*)(sizeof(vec4)*2));

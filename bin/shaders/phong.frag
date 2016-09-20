@@ -1,32 +1,44 @@
 // classic Phong equation
 #version 410
-
-
 in vec4 vNormal;
+in vec4 vColor;
 in vec4 vPosition;
-out vec4 fragColor;
+
+
 uniform vec3 Kd;
 uniform vec3 Id;
 uniform vec3 Ka;
 uniform vec3 Ia;
+uniform vec3 Ks;
+uniform vec3 Is;
 uniform vec3 lightDirection;
 uniform vec3 cameraPosition;
+uniform float specularPower;
 
+
+
+out vec4 fragColor;
 
 void main() 
 {  
-	vec4 eye = vPosition - vec4(cameraPosition,1);
-	//r.z = 0.25f;
+	vec3 eye = normalize(cameraPosition-vPosition.xyz);
+	vec3 n = normalize(vNormal.xyz);
+	vec3 light = normalize(lightDirection);
+	vec3 Reflection = 2 * dot(n, light) * n - light;
 
+	float lambert = max(0, dot(n,light));
+	float specularTerm = pow( max( 0, dot( Reflection, eye) ), specularPower );
+	float a = dot(n,vec3(0,1.0f,0));
+	vec3 red = vec3(250,0,0);
+    vec3 green = vec3(0, 250, 0); 
+    vec3 blue = vec3(0, 0, 250);
+    vec3 hemisphere = .5f * mix(red, blue, a) + .5f;
 
-
-	vec3 light = normalize(lightDirection) * -1;
-	vec4 convertLight = vec4(light, 1);
-	//vec4 Reflection = 2 * dot(vNormal, convertLight)
-	vec4 Ambient = vec4(Ka,1) * vec4(Ia,1);
-	vec3 Diffuse = Kd * max(0.0, dot(convertLight,vNormal)) * Id;
+	vec3 Ambient = (Ia * .01f) * (Ka) * hemisphere;
+	vec3 Diffuse = (Id * .1f) *  lambert * Kd;
+	vec3 Specular = Is * Ks * specularTerm ;
 
 	
-	//fragColor = Ambient;
-	fragColor = vec4(Diffuse,1);
- };
+
+	fragColor = vec4(Ambient + (10 * Diffuse) + Specular,1.0f);
+ }
